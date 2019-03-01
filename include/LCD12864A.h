@@ -4,4 +4,7 @@
 char setupLCDGPIO();
 void lcd_init();
 
+void lcd_on();
+void lcd_off();
+
 #endif // LCD16864A_H

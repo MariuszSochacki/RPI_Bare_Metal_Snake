@@ -15,8 +15,6 @@
 #define AUX_MU_BAUD ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00215068))
 
 void uart_init() {
-//  register unsigned int r;
-
   *AUX_ENABLE |= 1;
   *AUX_MU_CNTL = 0;
   *AUX_MU_LCR = 3;
@@ -24,20 +22,8 @@ void uart_init() {
   *AUX_MU_IER = 0;
   *AUX_MU_IIR = 0xc6;  
   *AUX_MU_BAUD = 270;  
-  /*
-  r = *GPFSEL1;
-  r &= ~((7 << 12) | (7 << 15));
-  r |= (2 << 12) | (2 << 15);   
-  *GPFSEL1 = r;
-  *GPPUD = 0;  
-  sleep(150);
-  *GPPUDCLK0 = (1 << 14) | (1 << 15);
-  sleep(150);
-  *GPPUDCLK0 = 0;   
-  */
   gpio_setup(14, GPIO_MODE_ALTFUNC5, GPIO_IN_PULL_NONE);
   gpio_setup(15, GPIO_MODE_ALTFUNC5, GPIO_IN_PULL_NONE);
-
   *AUX_MU_CNTL = 3;  
 }
 

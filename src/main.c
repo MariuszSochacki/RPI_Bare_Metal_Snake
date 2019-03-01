@@ -25,15 +25,18 @@ void main() {
   }
 
   lcd_init();
+  uart_puts("LCD initialized\n");
 
   while (1) {
     BUTTON button = getButtonPress();
     switch (button) {
       case BUTTON_UP:
-        uart_puts("Button up pressed\n");
+        lcd_on();
+        uart_puts("LCD on\n");
         break;
       case BUTTON_DOWN:
-        uart_puts("Button down pressed\n");
+        lcd_off();
+        uart_puts("LCD off\n");
         break;
       case BUTTON_LEFT:
         uart_puts("Button left pressed\n");

@@ -12,44 +12,45 @@ IMAGE_DIR := $(BUILD_DIR)
 SDCARD_DIR := $(BUILD_DIR)
 TEMPFS_DIR := $(BUILD_DIR)tempfs/
 
-SRCS := $(wildcard *.c)
-OBJS := $(SRCS:.c=.o)
-OBJS_PATH := $(patsubst %.o,$(OBJS_DIR)%.o,$(OBJS))
+SRC_DIR := src/
+INCLUDE_DIR := include/
+MISC_DIR := misc/
+ADDITIONAL_SD_DIR := $(MISC_DIR)sdcard/
+
+SRCS := $(wildcard $(SRC_DIR)*.c)
+OBJS := $(SRCS:$(SRC_DIR)%.c=$(OBJS_DIR)%.o)
 
 ELF_PATH := $(ELF_DIR)out.elf
 IMAGE_PATH := $(IMAGE_DIR)kernel.img
 SDCARD_PATH := $(SDCARD_DIR)sdcard.img
 
-LOOP_PATH_CMD := sudo losetup --show --find --partscan $(SDCARD_PATH)
+CFLAGS += -I$(INCLUDE_DIR)
 
 .PHONY: all
 all: image
 
-.PHONY: directories
-directories:
-	mkdir -p $(BUILD_DIR)
+$(OBJS_DIR)boot.o: $(SRC_DIR)boot.s
 	mkdir -p $(OBJS_DIR)
-	mkdir -p $(ELF_DIR)
-	mkdir -p $(ELF_DIR)
+	$(AS) -c $(SRC_DIR)boot.s -o $(OBJS_DIR)boot.o
 
-$(OBJS_DIR)boot.o: boot.s
-	$(AS) -c boot.s -o $(OBJS_DIR)boot.o
-
-$(OBJS_DIR)%.o: %.c
+$(OBJS_DIR)%.o: $(SRC_DIR)%.c
+	mkdir -p $(OBJS_DIR)
 	$(GCC) $(CFLAGS) -c $< -o $@
 
 .PHONY: elf
-elf: directories $(OBJS_DIR)boot.o $(OBJS_PATH)
-	$(LD) -T link.ld $(OBJS_DIR)boot.o $(OBJS_PATH) -o $(ELF_PATH)
+elf: $(OBJS_DIR)boot.o $(OBJS)
+	mkdir -p $(ELF_DIR)
+	$(LD) -T $(MISC_DIR)link.ld $(OBJS_DIR)boot.o $(OBJS) -o $(ELF_PATH)
 
 .PHONY: image
 image: elf
+	mkdir -p $(IMAGE_DIR)
 	$(OBJCOPY) $(ELF_PATH) -O binary $(IMAGE_PATH)
 
 .PHONY: sdcard
 sdcard: image
 #TODO: Put it back into Makefile instead of a shell script?
-	./build_image.sh $(SDCARD_PATH) $(TEMPFS_DIR) $(IMAGE_PATH)
+	./$(MISC_DIR)build_image.sh $(SDCARD_PATH) $(TEMPFS_DIR) $(IMAGE_PATH) $(MISC_DIR)sfdisk.script $(ADDITIONAL_SD_DIR)
 
 .PHONY: clean
 clean:

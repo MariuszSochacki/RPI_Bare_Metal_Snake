@@ -8,6 +8,7 @@
 #define RESET_GPIO 22
 #define CS_GPIO 5
 
+#define COMMAND_DISPLAY_ON 0xAF
 #define COMMAND_DISPLAY_OFF 0xAE
 #define COMMAND_ADC_NORMAL 0xA0
 #define COMMAND_OUTPUT_MODE_NORMAL 0xC0
@@ -20,48 +21,39 @@
 #define COMMAND_ELECTRONIC_VOLUME_SET 0x81
 #define COMMAND_COLUMN_ADDRESS_SET_H 0x10
 #define COMMAND_COLUMN_ADDRESS_SET_L 0x00
-#define COMMAND_DISPLAY_ON 0xAF
 
 char setupLCDGPIO() {
-  if (gpio_setup(SCL_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_NONE) == FALSE) {
+  if (gpio_setup(SCL_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_UP) == FALSE) {
     return FALSE;
   }
-  if (gpio_setup(SI_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_NONE) == FALSE) {
+  if (gpio_setup(SI_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_UP) == FALSE) {
     return FALSE;
   }
-  if (gpio_setup(A0_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_NONE) == FALSE) {
+  if (gpio_setup(A0_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_UP) == FALSE) {
     return FALSE;
   }
-  if (gpio_setup(RESET_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_NONE) == FALSE) {
+  if (gpio_setup(RESET_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_UP) == FALSE) {
     return FALSE;
   }
-  if (gpio_setup(CS_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_NONE) == FALSE) {
+  if (gpio_setup(CS_GPIO, GPIO_MODE_OUTPUT, GPIO_IN_PULL_UP) == FALSE) {
     return FALSE;
   }
 
   return TRUE;
 }
 
-/*
-Sub Command
-Reset P3.7
-Reset P3.4
-For Writecount = 1 To 8
- Rotate A , Left , 1
- Reset P3.1
- P1 = A
- Set P3.1
-Next Writecount
-Set P3.7
-*/
-
-void sendCommand(char command) { gpio_output(A0_GPIO, 0); }
-
-void sendData(char data) { gpio_output(A0_GPIO, 1); }
+void sendCommand(char command) {
+  gpio_output(A0_GPIO, 0);
+  sendBytes(command);
+}
+void sendData(char data) {
+  gpio_output(A0_GPIO, 1);
+  sendBytes(data);
+}
 
 void sendBytes(char bytes) {
   int i;
-  for (i = 7; i >= 0; i++) {
+  for (i = 7; i >= 0; i--) {
     gpio_output(SCL_GPIO, 0);
     wait_us(5);
     char bit = bytes & 0x80;
@@ -85,5 +77,13 @@ void lcd_init() {
   sendCommand(COMMAND_POWER_CIRCUIT_FULL);
   sendCommand(COMMAND_RESISTOR_RATIO_6);
   sendCommand(COMMAND_OUTPUT_MODE_NORMAL);
+  sendCommand(COMMAND_DISPLAY_ON);
+}
+
+void lcd_on() {
+  sendCommand(COMMAND_DISPLAY_ON);
+}
+
+void lcd_off() {
   sendCommand(COMMAND_DISPLAY_ON);
 }
