@@ -1,0 +1,6 @@
+label: dos
+label-id: 0x29b2c22c
+device: sdcard.img
+unit: sectors
+
+sdcard.img1 : start=        2048, size=      129024, type=c
