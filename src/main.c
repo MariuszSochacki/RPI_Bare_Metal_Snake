@@ -33,8 +33,10 @@ void main() {
   lcd_fill(0);
   lcd_display();
 
-
   snake_init();
+
+  timer_t timer;
+  timer_init(&timer, 300);
 
   while (1) {
     button_t button = getButtonPress();
@@ -44,25 +46,23 @@ void main() {
         break;
       case BUTTON_UP:
         direction = DIRECTION_UP;
-        uart_puts("UP\n");
         break;
       case BUTTON_DOWN:
         direction = DIRECTION_DOWN;
-        uart_puts("DOWN\n");
         break;
       case BUTTON_LEFT:
         direction = DIRECTION_LEFT;
-        uart_puts("LEFT\n");
         break;
       case BUTTON_RIGHT:
         direction = DIRECTION_RIGHT;
-        uart_puts("RIGHT\n");
         break;
       default:
         uart_puts("Invalid button pressed\n");
         wait_s(5);
+        return;
     }
-    snake_move(direction);
-    wait_ms(300);
+    if (timer_update(&timer)) {
+      snake_move(direction);
+    }
   }
 }

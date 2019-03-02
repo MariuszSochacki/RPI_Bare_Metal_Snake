@@ -1,7 +1,9 @@
+#include "timer.h"
+#include "bool.h"
 #include "gpio.h"
 
-#define SYSTMR_LO ((volatile unsigned int*)(PI_IOBASE_ADDR + 0x00003004))
-#define SYSTMR_HI ((volatile unsigned int*)(PI_IOBASE_ADDR + 0x00003008))
+#define SYSTMR_LO ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00003004))
+#define SYSTMR_HI ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00003008))
 
 unsigned long get_system_timer() {
   unsigned int h;
@@ -21,9 +23,9 @@ void wait_until(unsigned long until) {
   }
 }
 
-void wait_s(unsigned ms) {
+void wait_s(unsigned s) {
   unsigned long t = get_system_timer();
-  wait_until(t + ms * 1000 * 1000);
+  wait_until(t + s * 1000 * 1000);
 }
 
 void wait_ms(unsigned ms) {
@@ -42,4 +44,17 @@ void sleep(unsigned long cycles) {
       asm volatile("nop");
     }
   }
+}
+
+void timer_init(timer_t *timer, unsigned interval_ms) {
+  timer->interval = interval_ms * 1000;
+  timer->last = get_system_timer();
+}
+
+char timer_update(timer_t *timer) {
+  if (get_system_timer() > timer->last + timer->interval) {
+    timer->last = timer->last + timer->interval;
+    return TRUE;
+  }
+  return FALSE;
 }
