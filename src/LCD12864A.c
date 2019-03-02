@@ -54,7 +54,7 @@ char setupLCDGPIO() {
   return TRUE;
 }
 
-void sendBytes(char bytes) {
+static void sendBytes(char bytes) {
   int i;
   for (i = 7; i >= 0; i--) {
     gpio_output(SCL_GPIO, 0);
@@ -67,11 +67,12 @@ void sendBytes(char bytes) {
   }
 }
 
-void sendCommand(char command) {
+static void sendCommand(char command) {
   gpio_output(A0_GPIO, 0);
   sendBytes(command);
 }
-void sendData(char data) {
+
+static void sendData(char data) {
   gpio_output(A0_GPIO, 1);
   sendBytes(data);
 }

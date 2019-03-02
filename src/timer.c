@@ -5,7 +5,7 @@
 #define SYSTMR_LO ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00003004))
 #define SYSTMR_HI ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00003008))
 
-unsigned long get_system_timer() {
+static unsigned long get_system_timer() {
   unsigned int h;
   unsigned int l;
   do {

@@ -9,12 +9,12 @@
 
 #define SNAKE_INITIAL_LENGTH 10
 
-point_t snake_position[MAP_SIZE_X * MAP_SIZE_Y];
-unsigned char snake_length;
-char last_direction;
-point_t food_position;
+static point_t snake_position[MAP_SIZE_X * MAP_SIZE_Y];
+static unsigned char snake_length;
+static char last_direction;
+static point_t food_position;
 
-char is_empty_space(point_t point) {
+static char is_empty_space(point_t point) {
   for (int i = 0; i < snake_length; i++) {
     if ((snake_position[i].x == point.x) && (snake_position[i].y == point.y)) {
       return FALSE;
@@ -23,7 +23,7 @@ char is_empty_space(point_t point) {
   return TRUE;
 }
 
-void snake_display_point(point_t point, char on) {
+static void snake_display_point(point_t point, char on) {
   lcd_set_point(point.x * 2, point.y * 2, on);
   lcd_set_point(point.x * 2, point.y * 2 + 1, on);
   lcd_set_point(point.x * 2 + 1, point.y * 2, on);
@@ -31,7 +31,7 @@ void snake_display_point(point_t point, char on) {
   lcd_display_area(point.x * 2, point.y * 2, point.x * 2 + 1, point.y * 2 + 1);
 }
 
-void spawn_food() {
+static void spawn_food() {
   food_position.x = rand(0, MAP_SIZE_X);
   food_position.y = rand(0, MAP_SIZE_Y);
 
