@@ -14,10 +14,10 @@ unsigned long get_system_timer() {
   return ((unsigned long)h << 32) | l;
 }
 
-// TODO: Redefine to macro to save some function calls
+// TODO: Redefine to macro to save some function calls?
 void wait_until(unsigned long until) {
   while (until >= get_system_timer()) {
-    asm("nop");
+    asm volatile("nop");
   }
 }
 

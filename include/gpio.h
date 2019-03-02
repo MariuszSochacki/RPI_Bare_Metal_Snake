@@ -33,18 +33,18 @@ typedef enum {
   GPIO_MODE_ALTFUNC2 = 6,
   GPIO_MODE_ALTFUNC3 = 7,
   GPIO_MODE_MAX = 7
-} GPIO_MODE;
+} gpio_mode_t;
 
 typedef enum {
-  GPIO_IN_PULL_NONE = 0,
-  GPIO_IN_PULL_DOWN = 1,
-  GPIO_IN_PULL_UP = 2,
-  GPIO_IN_PULL_MODE_REMAIN = 2,
-  GPIO_IN_PULL_MODE_MAX = 2,
-} GPIO_IN_PULL_MODE;
+  GPIO_PULL_NONE = 0,
+  GPIO_PULL_DOWN = 1,
+  GPIO_PULL_UP = 2,
+  GPIO_PULL_MODE_REMAIN = 2,
+  GPIO_PULL_MODE_MAX = 2,
+} gpio_pull_mode_t;
 
-char gpio_setup(unsigned int gpio, GPIO_MODE gpio_mode,
-                GPIO_IN_PULL_MODE pull_mode);
+char gpio_setup(unsigned int gpio, gpio_mode_t gpio_mode,
+                gpio_pull_mode_t pull_mode);
 
 char gpio_output(unsigned int gpio, char on);
 char gpio_input(unsigned int gpio);

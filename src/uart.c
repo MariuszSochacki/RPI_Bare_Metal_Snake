@@ -1,6 +1,9 @@
 #include "gpio.h"
 #include "timer.h"
 
+#define UART_GPIO1 14
+#define UART_GPIO2 15
+
 #define AUX_ENABLE ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00215004))
 #define AUX_MU_IO ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00215040))
 #define AUX_MU_IER ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00215044))
@@ -22,8 +25,8 @@ void uart_init() {
   *AUX_MU_IER = 0;
   *AUX_MU_IIR = 0xc6;  
   *AUX_MU_BAUD = 270;  
-  gpio_setup(14, GPIO_MODE_ALTFUNC5, GPIO_IN_PULL_NONE);
-  gpio_setup(15, GPIO_MODE_ALTFUNC5, GPIO_IN_PULL_NONE);
+  gpio_setup(UART_GPIO1, GPIO_MODE_ALTFUNC5, GPIO_PULL_NONE);
+  gpio_setup(UART_GPIO2, GPIO_MODE_ALTFUNC5, GPIO_PULL_NONE);
   *AUX_MU_CNTL = 3;  
 }
 

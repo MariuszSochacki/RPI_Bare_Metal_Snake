@@ -2,8 +2,8 @@
 #include "bool.h"
 #include "timer.h"
 
-char gpio_setup(unsigned int gpio, GPIO_MODE gpio_mode,
-                GPIO_IN_PULL_MODE pull_mode) {
+char gpio_setup(unsigned int gpio, gpio_mode_t gpio_mode,
+                gpio_pull_mode_t pull_mode) {
   unsigned int* gpfsel = GPFSEL0;
   if (gpio > 53) {
     return FALSE;
@@ -11,11 +11,11 @@ char gpio_setup(unsigned int gpio, GPIO_MODE gpio_mode,
   if (gpio_mode < 0 || gpio_mode > GPIO_MODE_MAX) {
     return FALSE;
   }
-  if (pull_mode < 0 || pull_mode > GPIO_IN_PULL_MODE_MAX) {
+  if (pull_mode < 0 || pull_mode > GPIO_PULL_MODE_MAX) {
     return FALSE;
   }
 
-  if (pull_mode != GPIO_IN_PULL_MODE_REMAIN) {
+  if (pull_mode != GPIO_PULL_MODE_REMAIN) {
     unsigned int* gppudclk = GPPUDCLK0;
     *GPPUD = pull_mode;
     sleep(150);
@@ -33,7 +33,6 @@ char gpio_setup(unsigned int gpio, GPIO_MODE gpio_mode,
   return TRUE;
 }
 
-// TODO: Fix potential change of other bits?
 char gpio_output(unsigned int gpio, char on) {
   if (gpio > 53) {
     return FALSE;
@@ -42,7 +41,7 @@ char gpio_output(unsigned int gpio, char on) {
   unsigned int bit = 1 << (gpio % 32);
   unsigned int regnum = gpio / 32;
 
-  if (on == FALSE) {
+  if (!on) {
     p = GPCLR0;
   } else {
     p = GPSET0;
