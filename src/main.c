@@ -1,6 +1,7 @@
 #include "LCD12864A.h"
 #include "bool.h"
 #include "buttons.h"
+#include "rand.h"
 #include "snake.h"
 #include "timer.h"
 #include "uart.h"
@@ -10,6 +11,7 @@ void *__stack_chk_guard = (void *)0xA5A5A5A5;
 void __stack_chk_fail(void) { uart_puts("Stack protector fail!"); }
 
 void main() {
+  rand_init();
   uart_init();
   direction_t direction = DIRECTION_RIGHT;
 
@@ -62,7 +64,10 @@ void main() {
         return;
     }
     if (timer_update(&timer)) {
-      snake_move(direction);
+      if (snake_move(direction)) {
+        snake_init();
+        direction = DIRECTION_RIGHT;
+      }
     }
   }
 }

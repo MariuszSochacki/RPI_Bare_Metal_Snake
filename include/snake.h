@@ -2,10 +2,10 @@
 #define SNAKE_H
 
 typedef enum {
-  DIRECTION_UP = 0,
-  DIRECTION_DOWN = 1,
-  DIRECTION_RIGHT = 2,
-  DIRECTION_LEFT = 3
+  DIRECTION_UP,
+  DIRECTION_DOWN,
+  DIRECTION_RIGHT,
+  DIRECTION_LEFT
 } direction_t;
 
 typedef struct {
@@ -14,6 +14,6 @@ typedef struct {
 } point_t;
 
 void snake_init();
-void snake_move(direction_t direction);
+char snake_move(direction_t direction);
 
 #endif  // SNAKE_H

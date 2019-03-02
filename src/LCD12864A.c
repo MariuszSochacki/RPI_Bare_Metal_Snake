@@ -24,6 +24,8 @@
 #define CMD_SET_COLUMN_H 0x10
 #define CMD_SET_COLUMN_L 0x00
 #define CMD_SET_LINE_0 0x40
+#define CMD_COLOUR_INVERSE_OFF 0xA6
+#define CMD_COLOUR_INVERSE_ON 0xA7
 
 #define LCD_WIDTH 128
 #define LCD_HEIGHT 64
@@ -124,7 +126,6 @@ void lcd_display() {
 
 void lcd_display_area(unsigned char x1, unsigned char y1, unsigned char x2,
                       unsigned char y2) {
-  //sendCommand(CMD_SET_LINE_0 + x1);
   for (char page = y1 / PAGE_COUNT; page <= y2 / PAGE_COUNT; page++) {
     sendCommand(CMD_SET_PAGE | page);
     sendCommand(CMD_SET_COLUMN_H | ((x1 >> 4) & 0xf));
@@ -134,13 +135,8 @@ void lcd_display_area(unsigned char x1, unsigned char y1, unsigned char x2,
     }
   }
 }
-/*
-void lcd_display_page(char page) {
-  sendCommand(CMD_SET_PAGE | page);
-  sendCommand(CMD_SET_COLUMN_H);
-  sendCommand(CMD_SET_COLUMN_L);
-  for (char x = LCD_WIDTH/2; x < LCD_WIDTH; x++) {
-    sendData(pixel_map[x + page * LCD_WIDTH]);
-  }
+
+void lcd_invert_color(char on) {
+  (on) ? sendCommand(CMD_COLOUR_INVERSE_ON)
+       : sendCommand(CMD_COLOUR_INVERSE_OFF);
 }
-*/

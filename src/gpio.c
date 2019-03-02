@@ -4,7 +4,7 @@
 
 char gpio_setup(unsigned int gpio, gpio_mode_t gpio_mode,
                 gpio_pull_mode_t pull_mode) {
-  unsigned int* gpfsel = GPFSEL0;
+  volatile unsigned int* gpfsel = GPFSEL0;
   if (gpio > 53) {
     return FALSE;
   }
@@ -16,7 +16,7 @@ char gpio_setup(unsigned int gpio, gpio_mode_t gpio_mode,
   }
 
   if (pull_mode != GPIO_PULL_MODE_REMAIN) {
-    unsigned int* gppudclk = GPPUDCLK0;
+    volatile unsigned int* gppudclk = GPPUDCLK0;
     *GPPUD = pull_mode;
     sleep(150);
     gppudclk[gpio / 32] = 1 << (gpio % 32);
