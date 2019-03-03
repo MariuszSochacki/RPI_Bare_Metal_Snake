@@ -1,5 +1,4 @@
 #include "gpio.h"
-#include "timer.h"
 
 #define UART_GPIO1 14
 #define UART_GPIO2 15
