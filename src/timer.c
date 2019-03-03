@@ -5,6 +5,11 @@
 #define SYSTMR_LO ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00003004))
 #define SYSTMR_HI ((volatile unsigned int *)(PI_IOBASE_ADDR + 0x00003008))
 
+#define WAIT_UNTIL(x)                                   \
+  {                                                     \
+    while (x > get_system_timer()) asm volatile("nop"); \
+  }
+
 static unsigned long get_system_timer() {
   unsigned int h;
   unsigned int l;
@@ -25,17 +30,17 @@ void wait_until(unsigned long until) {
 
 void wait_s(unsigned s) {
   unsigned long t = get_system_timer();
-  wait_until(t + s * 1000 * 1000);
+  WAIT_UNTIL(t + s * 1000 * 1000);
 }
 
 void wait_ms(unsigned ms) {
   unsigned long t = get_system_timer();
-  wait_until(t + ms * 1000);
+  WAIT_UNTIL(t + ms * 1000);
 }
 
 void wait_us(unsigned long us) {
   unsigned long t = get_system_timer();
-  wait_until(t + us);
+  WAIT_UNTIL(t+ us);
 }
 
 void sleep(unsigned long cycles) {

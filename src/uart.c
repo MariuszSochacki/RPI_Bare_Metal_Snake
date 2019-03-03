@@ -47,7 +47,7 @@ char uart_getc() {
   return r == '\r' ? '\n' : r;
 }
 
-void uart_puts(char *s) {
+void uart_puts(const char *s) {
   while (*s) {
     if (*s == '\n') uart_send('\r');
     uart_send(*s++);

@@ -34,24 +34,12 @@
 
 char pixel_map[PIXEL_MAP_SIZE];
 
-char setupLCDGPIO() {
-  if (!gpio_setup(SCL_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP)) {
-    return FALSE;
-  }
-  if (!gpio_setup(SI_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP)) {
-    return FALSE;
-  }
-  if (!gpio_setup(A0_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP)) {
-    return FALSE;
-  }
-  if (!gpio_setup(RESET_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP)) {
-    return FALSE;
-  }
-  if (!gpio_setup(CS_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP)) {
-    return FALSE;
-  }
-
-  return TRUE;
+void setupLCDGPIO() {
+  gpio_setup(SCL_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP);
+  gpio_setup(SI_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP);
+  gpio_setup(A0_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP);
+  gpio_setup(RESET_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP);
+  gpio_setup(CS_GPIO, GPIO_MODE_OUTPUT, GPIO_PULL_UP);
 }
 
 static void sendBytes(char bytes) {
@@ -78,6 +66,7 @@ static void sendData(char data) {
 }
 
 void lcd_init() {
+  setupLCDGPIO();
   gpio_output(CS_GPIO, 0);
   gpio_output(RESET_GPIO, 0);
 
@@ -89,6 +78,7 @@ void lcd_init() {
   sendCommand(CMD_POWER_CIRCUIT_FULL);
   sendCommand(CMD_RESISTOR_RATIO_6);
   sendCommand(CMD_OUTPUT_MODE_NORMAL);
+  sendCommand(CMD_COLOUR_INVERSE_OFF);
   lcd_fill(0);
 }
 

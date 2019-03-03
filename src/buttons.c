@@ -23,19 +23,9 @@ button_t getButtonPress() {
   return BUTTON_NONE;
 }
 
-char setupButtonsGPIO() {
-  if (!gpio_setup(BUTTON_UP_GPIO, GPIO_MODE_INPUT, GPIO_PULL_DOWN)) {
-    return FALSE;
-  }
-  if (!gpio_setup(BUTTON_DOWN_GPIO, GPIO_MODE_INPUT, GPIO_PULL_DOWN)) {
-    return FALSE;
-  }
-  if (!gpio_setup(BUTTON_LEFT_GPIO, GPIO_MODE_INPUT, GPIO_PULL_DOWN)) {
-    return FALSE;
-  }
-  if (!gpio_setup(BUTTON_RIGHT_GPIO, GPIO_MODE_INPUT, GPIO_PULL_DOWN)) {
-    return FALSE;
-  }
-
-  return TRUE;
+void setupButtonsGPIO() {
+  gpio_setup(BUTTON_UP_GPIO, GPIO_MODE_INPUT, GPIO_PULL_DOWN);
+  gpio_setup(BUTTON_DOWN_GPIO, GPIO_MODE_INPUT, GPIO_PULL_DOWN);
+  gpio_setup(BUTTON_LEFT_GPIO, GPIO_MODE_INPUT, GPIO_PULL_DOWN);
+  gpio_setup(BUTTON_RIGHT_GPIO, GPIO_MODE_INPUT, GPIO_PULL_DOWN);
 }

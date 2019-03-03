@@ -9,6 +9,6 @@ typedef enum {
   BUTTON_LEFT = 4
 } button_t;
 button_t getButtonPress();
-char setupButtonsGPIO();
+void setupButtonsGPIO();
 
 #endif  // BUTTONS_H
